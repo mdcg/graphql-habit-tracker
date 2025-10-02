@@ -91,3 +91,10 @@ class MongoHabitTrackerRepository(HabitTrackerRepository):
 
         user.habits = [habit for habit in user.habits if str(habit.id) != habit_id]
         return user
+
+    def delete_user(self, user_id: str) -> None:
+        result = self.collection.delete_one({"_id": ObjectId(user_id)})
+        if result.deleted_count == 0:
+            raise UserNotFoundError("Usuário não encontrado.")
+
+        return None

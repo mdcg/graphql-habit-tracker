@@ -181,6 +181,16 @@ class Mutation:
 
         return UserGraphQL.from_domain(user)
 
+    @strawberry.mutation
+    def delete_user(self, user_id: strawberry.ID) -> None:
+        repository = MongoHabitTrackerRepository()
+        try:
+            repository.delete_user(user_id)
+        except UserNotFoundError as err:
+            raise GraphQLError(str(err))
+
+        return None
+
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)
 

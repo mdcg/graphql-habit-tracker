@@ -29,6 +29,10 @@ class HabitTrackerRepository(ABC):
     def delete_habit(self, user_id: str, habit_id: str) -> User:
         pass
 
+    @abstractmethod
+    def delete_user(self, user_id) -> None:
+        pass
+
     # @abstractmethod
     # def get_habit_by_id(self):
     #     pass
@@ -39,10 +43,6 @@ class HabitTrackerRepository(ABC):
 
     # @abstractmethod
     # def update_habit(self):
-    #     pass
-
-    # @abstractmethod
-    # def delete_habit(self):
     #     pass
 
     # @abstractmethod
