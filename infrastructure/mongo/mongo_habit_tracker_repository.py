@@ -8,6 +8,7 @@ from pymongo.errors import DuplicateKeyError
 
 from domain.entities.habits import Habit
 from domain.entities.users import User
+from domain.exceptions.habits_exceptions import HabitNotFoundError
 from domain.exceptions.users_exceptions import (
     UserAlreadyRegisteredError,
     UserNotFoundError,
@@ -76,4 +77,17 @@ class MongoHabitTrackerRepository(HabitTrackerRepository):
             {"$push": {"habits": habit.to_dict()}},
         )
         user.habits.append(habit)
+        return user
+
+    def delete_habit(self, user_id: str, habit_id: str) -> User:
+        user = self.get_user_by_id(user_id)
+        result = self.collection.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$pull": {"habits": {"id": ObjectId(habit_id)}}},
+        )
+
+        if result.modified_count == 0:
+            raise HabitNotFoundError("Hábito não encontrado para o usuário.")
+
+        user.habits = [habit for habit in user.habits if str(habit.id) != habit_id]
         return user

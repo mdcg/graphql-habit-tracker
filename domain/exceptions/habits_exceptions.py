@@ -4,3 +4,7 @@ class InvalidHabitRuleError(Exception):
 
 class InvalidDateError(Exception):
     pass
+
+
+class HabitNotFoundError(Exception):
+    pass

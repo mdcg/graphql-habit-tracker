@@ -22,7 +22,11 @@ class HabitTrackerRepository(ABC):
         pass
 
     @abstractmethod
-    def create_habit(self):
+    def create_habit(self) -> User:
+        pass
+
+    @abstractmethod
+    def delete_habit(self, user_id: str, habit_id: str) -> User:
         pass
 
     # @abstractmethod
