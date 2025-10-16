@@ -30,7 +30,11 @@ class HabitTrackerRepository(ABC):
         pass
 
     @abstractmethod
-    def delete_user(self, user_id) -> None:
+    def delete_user(self, user_id: str) -> None:
+        pass
+
+    @abstractmethod
+    def update_user(self, user_id: str, user: User) -> None:
         pass
 
     # @abstractmethod

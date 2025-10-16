@@ -98,3 +98,25 @@ class MongoHabitTrackerRepository(HabitTrackerRepository):
             raise UserNotFoundError("Usuário não encontrado.")
 
         return None
+
+    def update_user(self, user_id: str, user: User):
+        try:
+            oid = ObjectId(user_id)
+        except InvalidId:
+            raise UserNotFoundError("ID inválido.")
+
+        data = user.to_dict() if user else {}
+        for k in ("_id", "id", "created_at", "habits"):
+            data.pop(k, None)
+
+        data = {k: v for k, v in data.items() if v is not None}
+
+        try:
+            result = self.collection.update_one({"_id": oid}, {"$set": data})
+        except DuplicateKeyError:
+            raise UserAlreadyRegisteredError("E-mail já cadastrado.")
+
+        if result.matched_count == 0:
+            raise UserNotFoundError("Usuário não encontrado.")
+
+        return self.get_user_by_id(user_id)

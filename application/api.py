@@ -159,6 +159,16 @@ class Mutation:
         return UserGraphQL.from_domain(user)
 
     @strawberry.mutation
+    def update_user(self, user_id: str, user: UserInputGraphQL) -> UserGraphQL:
+        repository = MongoHabitTrackerRepository()
+        try:
+            user = repository.update_user(user_id, user.to_domain())
+        except (UserAlreadyRegisteredError, UserNotFoundError) as err:
+            raise GraphQLError(str(err))
+
+        return UserGraphQL.from_domain(user)
+
+    @strawberry.mutation
     def create_habit(self, habit: HabitInputGraphQL) -> UserGraphQL:
         repository = MongoHabitTrackerRepository()
         user_id = habit.user_id
